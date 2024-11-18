@@ -32,33 +32,33 @@ def agregar_meta(meta, monto_objetivo):
 # Formulario para registrar ingresos/gastos
 def formulario_registro():
     st.header("Registrar Ingreso o Gasto")
-    tipo = st.selectbox("Tipo", ["Ingreso", "Gasto"])
-    categoria = st.text_input("Categoría (Ejemplo: Alimentación, Transporte, etc.)")
-    monto = st.number_input("Monto", min_value=0.01, format="%.2f")
-    descripcion = st.text_area("Descripción")
+    tipo = st.selectbox("Tipo", ["Ingreso", "Gasto"], key="tipo_input")
+    categoria = st.text_input("Categoría (Ejemplo: Alimentación, Transporte, etc.)", key="categoria_input")
+    monto = st.number_input("Monto", min_value=0.01, format="%.2f", key="monto_input")
+    descripcion = st.text_area("Descripción", key="descripcion_input")
     
-    if st.button("Agregar Registro"):
+    if st.button("Agregar Registro", key="agregar_registro_button"):
         agregar_registro(tipo, categoria, monto, descripcion)
         st.success(f"{tipo} registrado correctamente.")
 
 # Formulario para presupuestos
 def formulario_presupuesto():
     st.header("Establecer Presupuesto Mensual")
-    mes = st.selectbox("Mes", [datetime.datetime.now().strftime("%B")])  # Solo el mes actual para simplificar
-    categoria = st.text_input("Categoría (Ejemplo: Alimentación, Transporte, etc.)")
-    monto = st.number_input("Monto Presupuestado", min_value=0.01, format="%.2f")
+    mes = st.selectbox("Mes", [datetime.datetime.now().strftime("%B")], key="mes_input")  # Solo el mes actual para simplificar
+    categoria = st.text_input("Categoría (Ejemplo: Alimentación, Transporte, etc.)", key="categoria_presupuesto_input")
+    monto = st.number_input("Monto Presupuestado", min_value=0.01, format="%.2f", key="monto_presupuesto_input")
     
-    if st.button("Agregar Presupuesto"):
+    if st.button("Agregar Presupuesto", key="agregar_presupuesto_button"):
         agregar_presupuesto(mes, categoria, monto)
         st.success(f"Presupuesto para {categoria} en {mes} agregado correctamente.")
 
 # Formulario para metas de ahorro
 def formulario_metas_ahorro():
     st.header("Establecer Meta de Ahorro")
-    meta = st.text_input("Nombre de la Meta (Ejemplo: Vacaciones, Emergencias, etc.)")
-    monto_objetivo = st.number_input("Monto Objetivo", min_value=0.01, format="%.2f")
+    meta = st.text_input("Nombre de la Meta (Ejemplo: Vacaciones, Emergencias, etc.)", key="meta_input")
+    monto_objetivo = st.number_input("Monto Objetivo", min_value=0.01, format="%.2f", key="monto_objetivo_input")
     
-    if st.button("Agregar Meta"):
+    if st.button("Agregar Meta", key="agregar_meta_button"):
         agregar_meta(meta, monto_objetivo)
         st.success(f"Meta de ahorro para {meta} agregada correctamente.")
 
@@ -109,5 +109,5 @@ formulario_presupuesto()
 formulario_metas_ahorro()
 
 # Generar reportes de diferencias entre presupuestado y real
-if st.button("Generar Reporte de Diferencias"):
+if st.button("Generar Reporte de Diferencias", key="generar_reporte_button"):
     generar_reporte()
