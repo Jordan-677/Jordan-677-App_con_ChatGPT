@@ -162,12 +162,3 @@ elif categoria == 'Tiempo':
 elif categoria == 'Velocidad':
     unidades = ['Millas por hora', 'Kilómetros por hora', 'Nudos', 'Metros por segundo']
     unidad_origen = st.selectbox('Selecciona la unidad de origen:', unidades)
-    unidad_destino = st.selectbox('Selecciona la unidad de destino:', unidades)
-    valor = st.number_input('Introduce el valor:', float)
-
-    if valor:
-        resultado = convertir_velocidad(valor, unidad_origen, unidad_destino)
-        st.write(f'{valor} {unidad_origen} = {resultado} {unidad_destino}')
-
-elif categoria == 'Área':
-   
