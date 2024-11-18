@@ -29,17 +29,20 @@ st.header("Ingreso de Materias")
 
 # Crear un formulario para ingresar los datos de las materias
 materias = []
+materia_counter = 0  # Contador para asignar una key única
+
 while True:
-    materia = st.text_input("Nombre de la materia (dejar vacío para finalizar):")
+    materia = st.text_input(f"Nombre de la materia (dejar vacío para finalizar):", key=f"materia_{materia_counter}")
     if not materia:
         break
     
-    calificacion = st.number_input(f"Calificación obtenida en {materia}:", min_value=0.0, max_value=5.0, format="%.1f")
-    creditos = st.number_input(f"Créditos de {materia}:", min_value=1, format="%d")
-    tipologia = st.selectbox(f"Tipología de {materia}:", ['Libre elección', 'Disciplinar obligatoria', 'Disciplinar optativa', 'Fundamental obligatoria', 'Fundamental optativa'])
+    calificacion = st.number_input(f"Calificación obtenida en {materia}:", min_value=0.0, max_value=5.0, format="%.1f", key=f"calificacion_{materia_counter}")
+    creditos = st.number_input(f"Créditos de {materia}:", min_value=1, format="%d", key=f"creditos_{materia_counter}")
+    tipologia = st.selectbox(f"Tipología de {materia}:", ['Libre elección', 'Disciplinar obligatoria', 'Disciplinar optativa', 'Fundamental obligatoria', 'Fundamental optativa'], key=f"tipologia_{materia_counter}")
     
     # Agregar los datos de la materia al arreglo de materias
     materias.append([materia, calificacion, creditos, tipologia])
+    materia_counter += 1
     
 # Crear un DataFrame con los datos ingresados
 if len(materias) > 0:
@@ -60,3 +63,4 @@ if len(materias) > 0:
         st.write(f"{tipologia}: {papa_tipologia:.2f}")
 else:
     st.warning("Por favor ingresa algunas materias antes de calcular el PAPA.")
+
