@@ -109,56 +109,112 @@ categoria = st.selectbox('Selecciona una categoría:', [
     'Temperatura', 'Longitud', 'Peso/Masa', 'Volumen', 
     'Tiempo', 'Velocidad', 'Área', 'Energía', 'Presión', 'Tamaño de datos'])
 
+# Conversión de Temperatura
 if categoria == 'Temperatura':
     unidades = ['Celsius', 'Fahrenheit', 'Kelvin']
     unidad_origen = st.selectbox('Selecciona la unidad de origen:', unidades)
     unidad_destino = st.selectbox('Selecciona la unidad de destino:', unidades)
-    valor = st.number_input('Introduce el valor:', float)
+    valor = st.number_input('Introduce el valor:', min_value=-1000.0, value=0.0, step=0.1)
 
     if valor:
         resultado = convertir_temperatura(valor, unidad_origen, unidad_destino)
         st.write(f'{valor} {unidad_origen} = {resultado} {unidad_destino}')
 
+# Conversión de Longitud
 elif categoria == 'Longitud':
     unidades = ['Pies', 'Metros', 'Pulgadas', 'Centímetros']
     unidad_origen = st.selectbox('Selecciona la unidad de origen:', unidades)
     unidad_destino = st.selectbox('Selecciona la unidad de destino:', unidades)
-    valor = st.number_input('Introduce el valor:', float)
+    valor = st.number_input('Introduce el valor:', min_value=0.0, value=1.0, step=0.1)
 
     if valor:
         resultado = convertir_longitud(valor, unidad_origen, unidad_destino)
         st.write(f'{valor} {unidad_origen} = {resultado} {unidad_destino}')
 
+# Conversión de Peso/Masa
 elif categoria == 'Peso/Masa':
     unidades = ['Libras', 'Kilogramos', 'Onzas', 'Gramos']
     unidad_origen = st.selectbox('Selecciona la unidad de origen:', unidades)
     unidad_destino = st.selectbox('Selecciona la unidad de destino:', unidades)
-    valor = st.number_input('Introduce el valor:', float)
+    valor = st.number_input('Introduce el valor:', min_value=0.0, value=1.0, step=0.1)
 
     if valor:
         resultado = convertir_peso(valor, unidad_origen, unidad_destino)
         st.write(f'{valor} {unidad_origen} = {resultado} {unidad_destino}')
 
+# Conversión de Volumen
 elif categoria == 'Volumen':
     unidades = ['Galones', 'Litros', 'Pulgadas cúbicas', 'Centímetros cúbicos']
     unidad_origen = st.selectbox('Selecciona la unidad de origen:', unidades)
     unidad_destino = st.selectbox('Selecciona la unidad de destino:', unidades)
-    valor = st.number_input('Introduce el valor:', float)
+    valor = st.number_input('Introduce el valor:', min_value=0.0, value=1.0, step=0.1)
 
     if valor:
         resultado = convertir_volumen(valor, unidad_origen, unidad_destino)
         st.write(f'{valor} {unidad_origen} = {resultado} {unidad_destino}')
 
+# Conversión de Tiempo
 elif categoria == 'Tiempo':
     unidades = ['Horas', 'Minutos', 'Días', 'Semanas']
     unidad_origen = st.selectbox('Selecciona la unidad de origen:', unidades)
     unidad_destino = st.selectbox('Selecciona la unidad de destino:', unidades)
-    valor = st.number_input('Introduce el valor:', float)
+    valor = st.number_input('Introduce el valor:', min_value=0.0, value=1.0, step=0.1)
 
     if valor:
         resultado = convertir_tiempo(valor, unidad_origen, unidad_destino)
         st.write(f'{valor} {unidad_origen} = {resultado} {unidad_destino}')
 
+# Conversión de Velocidad
 elif categoria == 'Velocidad':
     unidades = ['Millas por hora', 'Kilómetros por hora', 'Nudos', 'Metros por segundo']
     unidad_origen = st.selectbox('Selecciona la unidad de origen:', unidades)
+    unidad_destino = st.selectbox('Selecciona la unidad de destino:', unidades)
+    valor = st.number_input('Introduce el valor:', min_value=0.0, value=1.0, step=0.1)
+
+    if valor:
+        resultado = convertir_velocidad(valor, unidad_origen, unidad_destino)
+        st.write(f'{valor} {unidad_origen} = {resultado} {unidad_destino}')
+
+# Conversión de Área
+elif categoria == 'Área':
+    unidades = ['Metros cuadrados', 'Pies cuadrados', 'Kilómetros cuadrados', 'Millas cuadradas']
+    unidad_origen = st.selectbox('Selecciona la unidad de origen:', unidades)
+    unidad_destino = st.selectbox('Selecciona la unidad de destino:', unidades)
+    valor = st.number_input('Introduce el valor:', min_value=0.0, value=1.0, step=0.1)
+
+    if valor:
+        resultado = convertir_area(valor, unidad_origen, unidad_destino)
+        st.write(f'{valor} {unidad_origen} = {resultado} {unidad_destino}')
+
+# Conversión de Energía
+elif categoria == 'Energía':
+    unidades = ['Julios', 'Calorías', 'Kilovatios-hora', 'Megajulios']
+    unidad_origen = st.selectbox('Selecciona la unidad de origen:', unidades)
+    unidad_destino = st.selectbox('Selecciona la unidad de destino:', unidades)
+    valor = st.number_input('Introduce el valor:', min_value=0.0, value=1.0, step=0.1)
+
+    if valor:
+        resultado = convertir_energia(valor, unidad_origen, unidad_destino)
+        st.write(f'{valor} {unidad_origen} = {resultado} {unidad_destino}')
+
+# Conversión de Presión
+elif categoria == 'Presión':
+    unidades = ['Pascales', 'Atmósferas', 'Barras', 'Libras por pulgada cuadrada']
+    unidad_origen = st.selectbox('Selecciona la unidad de origen:', unidades)
+    unidad_destino = st.selectbox('Selecciona la unidad de destino:', unidades)
+    valor = st.number_input('Introduce el valor:', min_value=0.0, value=1.0, step=0.1)
+
+    if valor:
+        resultado = convertir_presion(valor, unidad_origen, unidad_destino)
+        st.write(f'{valor} {unidad_origen} = {resultado} {unidad_destino}')
+
+# Conversión de Tamaño de Datos
+elif categoria == 'Tamaño de datos':
+    unidades = ['Megabytes', 'Gigabytes', 'Kilobytes', 'Terabytes']
+    unidad_origen = st.selectbox('Selecciona la unidad de origen:', unidades)
+    unidad_destino = st.selectbox('Selecciona la unidad de destino:', unidades)
+    valor = st.number_input('Introduce el valor:', min_value=0.0, value=1.0, step=0.1)
+
+    if valor:
+        resultado = convertir_datos(valor, unidad_origen, unidad_destino)
+        st.write(f'{valor} {unidad_origen} = {resultado} {unidad_destino}')
