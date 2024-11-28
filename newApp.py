@@ -1,51 +1,76 @@
 import streamlit as st
-import time
 
-# Estado inicial
-if "question_1" not in st.session_state:
-    st.session_state.question_1 = None
-if "question_2" not in st.session_state:
-    st.session_state.question_2 = None
-if "force_yes" not in st.session_state:
-    st.session_state.force_yes = False
+# Configuración inicial de la app
+st.set_page_config(page_title="Preguntas", layout="centered")
 
-# Encabezado
-st.title("Hola, corazón")
-st.write("Responde las siguientes preguntas y mándame un screenshot a WhatsApp .")
+# Inicialización de estados
+if 'respuesta1' not in st.session_state:
+    st.session_state.respuesta1 = None
+if 'respuesta2' not in st.session_state:
+    st.session_state.respuesta2 = None
+if 'mensaje' not in st.session_state:
+    st.session_state.mensaje = ""
+if 'completado' not in st.session_state:
+    st.session_state.completado = False
+
+# Función para reiniciar los estados al recargar
+def reset_estado():
+    st.session_state.respuesta1 = None
+    st.session_state.respuesta2 = None
+    st.session_state.mensaje = ""
+    st.session_state.completado = False
+
+# Botón para recargar
+st.button("Recargar app", on_click=reset_estado)
+
+# Enunciado principal
+st.markdown("## Hola corazón, responde las siguientes preguntas y me mandas screenshot a WhatsApp. 😊")
 
 # Pregunta 1
-st.subheader("Pregunta 1:")
-response_1 = st.radio(
-    "Estoy invitando a Jordan a pizza 🍕:",
-    options=["", "Sí", "No"],
-    index=0,
-    key="question_1"
+st.markdown("### 1. Estoy invitando a Jordan a Pizza")
+respuesta1 = st.radio(
+    "Selecciona una opción:",
+    options=["", "Sí", "No"],  # "" crea la opción vacía inicial
+    index=0,  # Empieza siempre en la opción vacía
+    format_func=lambda x: "Selecciona una opción" if x == "" else x,  # Personaliza el texto de la opción vacía
+    key="respuesta1_radio"
 )
 
-if response_1 == "No":
-    st.warning("😏 Mmm... ¡esa no es la respuesta correcta!")
-    time.sleep(2)  # Simula una pausa para forzar reinicio
-    st.session_state.force_yes = True
-    st.session_state.question_1 = None  # Restablecer pregunta 1
-    st.experimental_rerun()
-elif response_1 == "Sí":
-    st.success("✅ Respuesta marcada con éxito.")
+if respuesta1 == "No":
+    st.session_state.mensaje = (
+        "❌ ¡Ups! Esa respuesta no es válida. Inténtalo de nuevo y elige la correcta. 😉"
+    )
+    st.session_state.respuesta1 = None
+    st.session_state.completado = False
+elif respuesta1 == "Sí":
+    st.session_state.respuesta1 = "Sí"
+    st.session_state.mensaje = "✅ Respuesta marcada con éxito."
 
-# Pregunta 2
-if response_1 == "Sí":
-    st.subheader("Pregunta 2:")
-    response_2 = st.radio(
-        "¿Es una cita? :",
+st.markdown(st.session_state.mensaje)
+
+# Solo mostrar la segunda pregunta si la primera fue correcta
+if st.session_state.respuesta1 == "Sí":
+    st.markdown("### 2. Es una cita?")
+    respuesta2 = st.radio(
+        "Selecciona una opción:",
         options=["", "Sí", "No"],
         index=0,
-        key="question_2"
+        format_func=lambda x: "Selecciona una opción" if x == "" else x,
+        key="respuesta2_radio"
     )
 
-# Resultado final
-if response_1 == "Sí" and st.session_state.question_2:
-    st.success("Muy bien, ya puedes tomarle screenshot .")
+    if respuesta2 in ["Sí", "No"]:
+        st.session_state.respuesta2 = respuesta2
 
-# Crédito
-st.write("---")
-st.write("App creada por **Jordan Sanchez Torres**")
+# Mostrar mensaje final solo si ambas respuestas están completas y correctas
+if st.session_state.respuesta1 == "Sí" and st.session_state.respuesta2:
+    st.markdown("### Muy bien, ya puedes tomarle screenshot 📸")
+    st.session_state.completado = True
+
+# Mensaje final opcional
+if st.session_state.completado:
+    st.success("Gracias por participar. 😄")
+
+# Créditos
+st.markdown("**App creada por Jordan Sanchez Torres**")
 
