@@ -3,7 +3,7 @@ import streamlit as st
 # Configuración inicial de la app
 st.set_page_config(page_title="Preguntas", layout="centered")
 
-# Variables para manejar estados
+# Inicialización de estados
 if 'respuesta1' not in st.session_state:
     st.session_state.respuesta1 = None
 if 'respuesta2' not in st.session_state:
@@ -13,6 +13,16 @@ if 'mensaje' not in st.session_state:
 if 'completado' not in st.session_state:
     st.session_state.completado = False
 
+# Función para reiniciar los estados al recargar
+def reset_estado():
+    st.session_state.respuesta1 = None
+    st.session_state.respuesta2 = None
+    st.session_state.mensaje = ""
+    st.session_state.completado = False
+
+# Botón para recargar
+st.button("Recargar app", on_click=reset_estado)
+
 # Enunciado principal
 st.markdown("## Hola corazón, responde las siguientes preguntas y me mandas screenshot a WhatsApp. 😊")
 
@@ -20,7 +30,9 @@ st.markdown("## Hola corazón, responde las siguientes preguntas y me mandas scr
 st.markdown("### 1. Estoy invitando a Jordan a Pizza")
 respuesta1 = st.radio(
     "Selecciona una opción:",
-    ["Sí", "No"],
+    options=["", "Sí", "No"],  # "" crea la opción vacía inicial
+    index=0,  # Empieza siempre en la opción vacía
+    format_func=lambda x: "Selecciona una opción" if x == "" else x,  # Personaliza el texto de la opción vacía
     key="respuesta1_radio"
 )
 
@@ -41,7 +53,9 @@ if st.session_state.respuesta1 == "Sí":
     st.markdown("### 2. Es una cita?")
     respuesta2 = st.radio(
         "Selecciona una opción:",
-        ["Sí", "No"],
+        options=["", "Sí", "No"],
+        index=0,
+        format_func=lambda x: "Selecciona una opción" if x == "" else x,
         key="respuesta2_radio"
     )
 
