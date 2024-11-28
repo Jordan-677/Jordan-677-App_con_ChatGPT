@@ -18,12 +18,16 @@ st.markdown("## Hola corazón, responde las siguientes preguntas y me mandas scr
 
 # Pregunta 1
 st.markdown("### 1. Estoy invitando a Jordan a Pizza")
-respuesta1 = st.radio("Selecciona una opción:", ["", "Sí", "No"], key="respuesta1_radio")
+respuesta1 = st.radio(
+    "Selecciona una opción:",
+    ["Sí", "No"],
+    index=1 if st.session_state.respuesta1 == "No" else 0,
+    key="respuesta1_radio"
+)
 
 if respuesta1 == "No":
     st.session_state.mensaje = "❌ Respuesta incorrecta. Por favor, selecciona nuevamente."
     st.session_state.respuesta1 = None
-    st.experimental_rerun()
 elif respuesta1 == "Sí":
     st.session_state.respuesta1 = "Sí"
     st.session_state.mensaje = "✅ Respuesta marcada con éxito."
@@ -32,8 +36,13 @@ st.markdown(st.session_state.mensaje)
 
 # Solo mostrar la segunda pregunta si la primera se respondió correctamente
 if st.session_state.respuesta1 == "Sí":
-    st.markdown("### 2. Es una Cita")
-    respuesta2 = st.radio("Selecciona una opción:", ["", "Sí", "No"], key="respuesta2_radio")
+    st.markdown("### 2. Es una cita?")
+    respuesta2 = st.radio(
+        "Selecciona una opción:",
+        ["Sí", "No"],
+        index=0,
+        key="respuesta2_radio"
+    )
 
     if respuesta2 in ["Sí", "No"]:
         st.session_state.respuesta2 = respuesta2
