@@ -1,4 +1,6 @@
 import streamlit as st
+from streamlit_drawable_canvas import st_canvas
+import time
 
 # Configuración inicial de la app
 st.set_page_config(page_title="Preguntas", layout="centered")
@@ -12,6 +14,8 @@ if 'mensaje' not in st.session_state:
     st.session_state.mensaje = ""
 if 'completado' not in st.session_state:
     st.session_state.completado = False
+if 'game_started' not in st.session_state:
+    st.session_state.game_started = False
 
 # Función para reiniciar los estados al recargar
 def reset_estado():
@@ -19,6 +23,7 @@ def reset_estado():
     st.session_state.respuesta2 = None
     st.session_state.mensaje = ""
     st.session_state.completado = False
+    st.session_state.game_started = False
 
 # Botón para recargar
 st.button("Recargar app", on_click=reset_estado)
@@ -67,10 +72,26 @@ if st.session_state.respuesta1 == "Sí" and st.session_state.respuesta2:
     st.markdown("### Muy bien, ya puedes tomarle screenshot 📸")
     st.session_state.completado = True
 
-# Mensaje final opcional
+# Mostrar el jueguito del dinosaurio
 if st.session_state.completado:
-    st.success("Gracias por participar. 😄")
+   
+
+    # Iniciar el juego solo si no ha sido iniciado
+    if not st.session_state.game_started:
+        st.session_state.game_started = True
+
+    # Parámetros del juego
+    canvas_result = st_canvas(
+        stroke_width=2,
+        stroke_color="#000000",
+        background_color="#f4f4f4",
+        height=200,
+        width=700,
+        drawing_mode="freedraw",
+        key="canvas",
+    )
+
+    st.write("Intenta dibujar un dinosaurio o simplemente diviértete 😄")
 
 # Créditos
-st.markdown("**Creado por Jordan Sanchez Torres**")
-
+st.markdown("**App creada por Jordan Sanchez Torres**")
