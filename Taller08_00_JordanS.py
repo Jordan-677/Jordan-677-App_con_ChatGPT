@@ -40,9 +40,9 @@ def procesar_datos(df):
     df.iloc[:, 0] = pd.to_datetime(df.iloc[:, 0], errors='coerce')  # Primera columna como fecha
     columnas_numericas = df.select_dtypes(include=[np.number]).columns
 
-    # Interpolar valores numéricos y reemplazar valores faltantes
+    # Interpolar valores numéricos y rellenar faltantes al inicio o al final
     df[columnas_numericas] = df[columnas_numericas].interpolate(method='linear', limit_direction='both')
-    df[columnas_numericas] = df[columnas_numericas].fillna(df[columnas_numericas].mean())  # Rellenar valores extremos que no puedan interpolarse
+    df[columnas_numericas] = df[columnas_numericas].bfill().ffill()  # Rellenar bordes faltantes
 
     # Reemplazar valores faltantes en columnas no numéricas
     df.iloc[:, 4] = df.iloc[:, 4].fillna("Desconocido")  # Quinta columna como texto
@@ -53,4 +53,3 @@ cargar_datos and cargar_archivo()
 
 url = st.sidebar.text_input("Ingrese la URL del archivo CSV")
 url and cargar_archivo_por_url(url)
-
