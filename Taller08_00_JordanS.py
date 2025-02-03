@@ -61,4 +61,3 @@ fig2 = plt.figure(figsize=(10, 6))
 sch.dendrogram(Z)
 plt.title("Clúster Jerárquico de Ubicaciones")
 st.pyplot(fig2)
-
