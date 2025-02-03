@@ -40,8 +40,9 @@ def procesar_datos(df):
     df.iloc[:, 0] = pd.to_datetime(df.iloc[:, 0], errors='coerce')  # Primera columna como fecha
     columnas_numericas = df.select_dtypes(include=[np.number]).columns
 
-    # Interpolar valores numéricos
+    # Interpolar valores numéricos y reemplazar valores faltantes
     df[columnas_numericas] = df[columnas_numericas].interpolate(method='linear', limit_direction='both')
+    df[columnas_numericas] = df[columnas_numericas].fillna(df[columnas_numericas].mean())  # Rellenar valores extremos que no puedan interpolarse
 
     # Reemplazar valores faltantes en columnas no numéricas
     df.iloc[:, 4] = df.iloc[:, 4].fillna("Desconocido")  # Quinta columna como texto
