@@ -12,7 +12,6 @@ st.title("Aplicación para Visualizar Datos de Deforestación")
 # Opciones de carga
 st.sidebar.header("Opciones")
 cargar_datos = st.sidebar.button("Cargar archivo")
-cargar_por_url = st.sidebar.button("Cargar por URL")
 
 @st.cache_data
 def cargar_archivo():
@@ -32,6 +31,8 @@ def cargar_archivo_por_url(url):
     except Exception as e:
         st.error(f"Error al cargar el archivo: {e}")
 
-url_ingresada = st.text_input("Ingrese la URL del archivo CSV", key="url_input")
 cargar_datos and cargar_archivo()
-url_ingresada and cargar_por_url and cargar_archivo_por_url(url_ingresada)
+
+url = st.sidebar.text_input("Ingrese la URL del archivo CSV")
+url and cargar_archivo_por_url(url)
+
