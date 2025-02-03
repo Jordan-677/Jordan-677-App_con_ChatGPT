@@ -51,11 +51,3 @@ fig2 = plt.figure(figsize=(10, 6))
 sch.dendrogram(Z)
 plt.title("Clúster Jerárquico de Ubicaciones")
 st.pyplot(fig2)
-
-    mostrar_mapa(df, variable)
-    
-    st.subheader("Análisis de Clúster")
-    analisis_cluster(df)
-
-if __name__ == "__main__":
-    main()
