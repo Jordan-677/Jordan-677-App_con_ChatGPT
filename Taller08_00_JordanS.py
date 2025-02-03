@@ -19,7 +19,7 @@ def cargar_archivo():
     url = "https://raw.githubusercontent.com/gabrielawad/programacion-para-ingenieria/refs/heads/main/archivos-datos/aplicaciones/deforestacion.csv"
     df = pd.read_csv(url)
     st.write("### Vista Previa del Archivo")
-    st.dataframe(df.head())
+    st.dataframe(df)
 
 cargar_datos and cargar_archivo()
 
