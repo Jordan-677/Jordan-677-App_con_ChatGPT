@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder
 from sklearn.neighbors import KNeighborsRegressor
 
@@ -61,6 +63,7 @@ def mostrar_datos(url):
         df_filled = fill_missing_data(df)
         st.write("Datos procesados:")
         st.dataframe(df_filled)
+        mostrar_funcionalidades(df_filled)
     except FileNotFoundError:
         st.warning("Por favor, ingresa una URL válida.")
     except Exception as e:
@@ -74,5 +77,66 @@ def cargar_desde_url():
     except ValueError:
         st.error("Error en la URL ingresada.")
 
+# Mostrar funcionalidades de análisis y visualización
+def mostrar_funcionalidades(df):
+    st.header("Funcionalidades de Análisis y Visualización")
+
+    checkboxes = [
+        ("Mapa de calor de densidad (Técnica: Tallado)", mostrar_mapa_calor),
+        ("Gráfico de barras: Artefactos por Cultura", mostrar_barras_cultura),
+        ("Correlación Edad vs Profundidad", mostrar_correlacion_edad_profundidad),
+        ("Distribución de Materiales por Cultura", mostrar_materiales_cultura),
+        ("Mapa de dispersión: Ubicación de artefactos", mostrar_mapa_dispersion),
+        ("Patrones decorativos por Cultura", mostrar_patrones_decorativos),
+        ("Patrones temporales en descubrimientos", mostrar_patrones_temporales)
+    ]
+
+    list(map(lambda cb: cb[1](df) if st.checkbox(cb[0]) else None, checkboxes))
+
+# Funciones auxiliares para visualización
+def mostrar_mapa_calor(df):
+    tecnica_tallado = df[df["tecnica"] == "tallado"]
+    plt.figure(figsize=(10, 6))
+    sns.heatmap(tecnica_tallado.corr(), annot=True, cmap="coolwarm")
+    st.pyplot(plt)
+
+def mostrar_barras_cultura(df):
+    plt.figure(figsize=(12, 6))
+    sns.countplot(data=df, x="cultura", order=df["cultura"].value_counts().index)
+    plt.xticks(rotation=45)
+    st.pyplot(plt)
+
+def mostrar_correlacion_edad_profundidad(df):
+    plt.figure(figsize=(8, 6))
+    sns.scatterplot(data=df, x="edad_aproximada", y="profundidad")
+    plt.title("Correlación entre Edad Aproximada y Profundidad")
+    st.pyplot(plt)
+
+def mostrar_materiales_cultura(df):
+    plt.figure(figsize=(12, 6))
+    sns.countplot(data=df, x="material", hue="cultura")
+    plt.xticks(rotation=45)
+    st.pyplot(plt)
+
+def mostrar_mapa_dispersion(df):
+    plt.figure(figsize=(8, 6))
+    sns.scatterplot(data=df, x="longitud", y="latitud")
+    plt.title("Ubicación Geográfica de los Artefactos")
+    st.pyplot(plt)
+
+def mostrar_patrones_decorativos(df):
+    plt.figure(figsize=(12, 6))
+    sns.countplot(data=df, x="patron_decorativo", hue="cultura")
+    plt.xticks(rotation=45)
+    st.pyplot(plt)
+
+def mostrar_patrones_temporales(df):
+    df["anio_descubrimiento"] = pd.to_datetime(df["anio_descubrimiento"], errors="coerce").dt.year
+    plt.figure(figsize=(12, 6))
+    sns.histplot(df["anio_descubrimiento"].dropna(), bins=30, kde=True)
+    plt.title("Distribución Temporal de Descubrimientos")
+    st.pyplot(plt)
+
 # Ejecutar acción seleccionada
 acciones.get(opcion, lambda: None)()
+
