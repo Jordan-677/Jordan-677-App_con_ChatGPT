@@ -43,6 +43,7 @@ resultado = (lambda: pd.read_csv(url), lambda: None)[url is None]()
 
 try:
     df_lleno = llenar_vacios_vectorizado(resultado)
+    df_lleno.columns = df_lleno.columns.str.strip().str.replace('á', 'a')  # Limpieza de nombres de columnas
     st.write("### Datos cargados y procesados:")
     st.dataframe(df_lleno)
 
@@ -58,11 +59,11 @@ try:
             .corr().loc[pd.IndexSlice[:, variable], 'Ingreso_Anual_USD']
             .reset_index()
         )
-        correlaciones_segmentadas.columns = [segmento, 'Variable', 'Correlación']
+        correlaciones_segmentadas.columns = [segmento, 'Variable', 'Correlacion']
         st.write(correlaciones_segmentadas.drop(columns=['Variable']))
 
     st.write("#### Correlación Segmentada por Género")
-    mostrar_correlacion_segmentada('Genero', 'Edad')
+    mostrar_correlacion_segmentada('Género', 'Edad')
 
     st.write("#### Correlación Segmentada por Frecuencia de Compras")
     mostrar_correlacion_segmentada('Historial_Compras', 'Edad')
@@ -70,7 +71,7 @@ try:
     # Mapas de ubicación
     st.header("Mapas de Ubicación")
     mapa_global = folium.Map(location=[df_lleno['Latitud'].mean(), df_lleno['Longitud'].mean()], zoom_start=6)
-    ubicaciones = df_lleno[['Latitud', 'Longitud', 'Genero', 'Ingreso_Anual_USD']].dropna().values
+    ubicaciones = df_lleno[['Latitud', 'Longitud', 'Género', 'Ingreso_Anual_USD']].dropna().values
 
     # Uso de numpy para vectorizar la adición de marcadores
     _ = [folium.Marker(location=[lat, lon], popup=f"{gen}, {ingreso} USD").add_to(mapa_global) for lat, lon, gen, ingreso in ubicaciones]
@@ -95,7 +96,7 @@ try:
     # Gráfico de barras por género y frecuencia de compra
     st.header("Gráfico de Barras")
     fig, ax = plt.subplots()
-    df_lleno.groupby(['Genero', 'Historial_Compras']).size().unstack().plot(kind='bar', ax=ax)
+    df_lleno.groupby(['Género', 'Historial_Compras']).size().unstack().plot(kind='bar', ax=ax)
     st.pyplot(fig)
 
     # Cálculo de distancias
@@ -106,3 +107,4 @@ try:
     st.write(distancias)
 except Exception as e:
     st.error(f"Error al cargar el archivo: {e}")
+
