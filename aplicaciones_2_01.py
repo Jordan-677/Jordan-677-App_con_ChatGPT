@@ -57,20 +57,23 @@ acciones = {
 # Función para mostrar datos desde una URL
 def mostrar_datos(url):
     try:
-        df = pd.read_csv(url)
-        df_filled = fill_missing_data(df)
-        st.write("Datos procesados:")
-        st.dataframe(df_filled)
+        if url.strip():
+            df = pd.read_csv(url)
+            df_filled = fill_missing_data(df)
+            st.write("Datos procesados:")
+            st.dataframe(df_filled)
+        else:
+            st.warning("Por favor, ingresa una URL válida.")
     except Exception as e:
         st.error(f"Error al cargar el archivo: {e}")
 
 # Función para cargar archivo desde una URL ingresada por el usuario
 def cargar_desde_url():
+    user_url = st.text_input("Ingresa la URL del archivo CSV:", placeholder="Esperando URL...")
     try:
-        user_url = st.text_input("Ingresa la URL del archivo CSV:", placeholder="Esperando URL...")
         mostrar_datos(user_url)
     except ValueError:
-        pass
+        st.error("Error en la URL ingresada.")
 
 # Ejecutar acción seleccionada
 acciones.get(opcion, lambda: None)()
