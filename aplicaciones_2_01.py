@@ -57,13 +57,12 @@ acciones = {
 # Función para mostrar datos desde una URL
 def mostrar_datos(url):
     try:
-        if url.strip():
-            df = pd.read_csv(url)
-            df_filled = fill_missing_data(df)
-            st.write("Datos procesados:")
-            st.dataframe(df_filled)
-        else:
-            st.warning("Por favor, ingresa una URL válida.")
+        df = pd.read_csv(url)
+        df_filled = fill_missing_data(df)
+        st.write("Datos procesados:")
+        st.dataframe(df_filled)
+    except FileNotFoundError:
+        st.warning("Por favor, ingresa una URL válida.")
     except Exception as e:
         st.error(f"Error al cargar el archivo: {e}")
 
