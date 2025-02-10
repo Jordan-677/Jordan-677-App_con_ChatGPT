@@ -66,7 +66,8 @@ try:
     mostrar_correlacion_segmentada('Género', 'Edad')
 
     st.write("#### Correlación Segmentada por Frecuencia de Compras")
-    mostrar_correlacion_segmentada('Historial_Compras', 'Edad')
+    df_lleno['Frecuencia_Compra'] = df_lleno['Frecuencia_Compra'].replace({'Baja': 1, 'Media': 2, 'Alta': 3})
+    mostrar_correlacion_segmentada('Frecuencia_Compra', 'Edad')
 
     # Mapas de ubicación
     st.header("Mapas de Ubicación")
@@ -96,7 +97,7 @@ try:
     # Gráfico de barras por género y frecuencia de compra
     st.header("Gráfico de Barras")
     fig, ax = plt.subplots()
-    df_lleno.groupby(['Género', 'Historial_Compras']).size().unstack().plot(kind='bar', ax=ax)
+    df_lleno.groupby(['Género', 'Frecuencia_Compra']).size().unstack().plot(kind='bar', ax=ax)
     st.pyplot(fig)
 
     # Cálculo de distancias
