@@ -60,6 +60,12 @@ acciones = {
 def mostrar_datos(url):
     try:
         df = pd.read_csv(url)
+        df.columns = [
+            "ID_Artefacto", "Nombre_Artefacto", "Material", "Edad_Aprox_Anios", "Ubicación_Descubrimiento", 
+            "Latitud", "Longitud", "Cultura_Asociada", "Función_Estimada", "Técnica_Fabricación", 
+            "Fecha_Descubrimiento", "Investigador_Principal", "Profundidad_Excavación_m", "Estado_Conservación", 
+            "Patrones_Decorativos", "Método_Fechado"
+        ]
         df_filled = fill_missing_data(df)
         st.write("Datos procesados:")
         st.dataframe(df_filled)
@@ -95,48 +101,49 @@ def mostrar_funcionalidades(df):
 
 # Funciones auxiliares para visualización
 def mostrar_mapa_calor(df):
-    tecnica_tallado = df[df["tecnica"] == "tallado"]
+    tecnica_tallado = df[df["Técnica_Fabricación"] == "tallado"]
     plt.figure(figsize=(10, 6))
     sns.heatmap(tecnica_tallado.corr(), annot=True, cmap="coolwarm")
     st.pyplot(plt)
 
 def mostrar_barras_cultura(df):
     plt.figure(figsize=(12, 6))
-    sns.countplot(data=df, x="cultura", order=df["cultura"].value_counts().index)
+    sns.countplot(data=df, x="Cultura_Asociada", order=df["Cultura_Asociada"].value_counts().index)
     plt.xticks(rotation=45)
     st.pyplot(plt)
 
 def mostrar_correlacion_edad_profundidad(df):
     plt.figure(figsize=(8, 6))
-    sns.scatterplot(data=df, x="edad_aproximada", y="profundidad")
+    sns.scatterplot(data=df, x="Edad_Aprox_Anios", y="Profundidad_Excavación_m")
     plt.title("Correlación entre Edad Aproximada y Profundidad")
     st.pyplot(plt)
 
 def mostrar_materiales_cultura(df):
     plt.figure(figsize=(12, 6))
-    sns.countplot(data=df, x="material", hue="cultura")
+    sns.countplot(data=df, x="Material", hue="Cultura_Asociada")
     plt.xticks(rotation=45)
     st.pyplot(plt)
 
 def mostrar_mapa_dispersion(df):
     plt.figure(figsize=(8, 6))
-    sns.scatterplot(data=df, x="longitud", y="latitud")
+    sns.scatterplot(data=df, x="Longitud", y="Latitud")
     plt.title("Ubicación Geográfica de los Artefactos")
     st.pyplot(plt)
 
 def mostrar_patrones_decorativos(df):
     plt.figure(figsize=(12, 6))
-    sns.countplot(data=df, x="patron_decorativo", hue="cultura")
+    sns.countplot(data=df, x="Patrones_Decorativos", hue="Cultura_Asociada")
     plt.xticks(rotation=45)
     st.pyplot(plt)
 
 def mostrar_patrones_temporales(df):
-    df["anio_descubrimiento"] = pd.to_datetime(df["anio_descubrimiento"], errors="coerce").dt.year
+    df["Fecha_Descubrimiento"] = pd.to_datetime(df["Fecha_Descubrimiento"], errors="coerce").dt.year
     plt.figure(figsize=(12, 6))
-    sns.histplot(df["anio_descubrimiento"].dropna(), bins=30, kde=True)
+    sns.histplot(df["Fecha_Descubrimiento"].dropna(), bins=30, kde=True)
     plt.title("Distribución Temporal de Descubrimientos")
     st.pyplot(plt)
 
 # Ejecutar acción seleccionada
 acciones.get(opcion, lambda: None)()
+
 
