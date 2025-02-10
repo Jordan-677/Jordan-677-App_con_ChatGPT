@@ -4,12 +4,6 @@ import numpy as np
 from sklearn.preprocessing import LabelEncoder
 from sklearn.neighbors import KNeighborsRegressor
 
-import streamlit as st
-import pandas as pd
-import numpy as np
-from sklearn.preprocessing import LabelEncoder
-from sklearn.neighbors import KNeighborsRegressor
-
 # Función para llenar datos faltantes
 def fill_missing_data(df):
     """
@@ -72,8 +66,11 @@ def mostrar_datos(url):
 
 # Función para cargar archivo desde una URL ingresada por el usuario
 def cargar_desde_url():
-    user_url = st.text_input("Ingresa la URL del archivo CSV:")
-    st.info("Esperando URL...") if not user_url else mostrar_datos(user_url)
+    try:
+        user_url = st.text_input("Ingresa la URL del archivo CSV:", placeholder="Esperando URL...")
+        mostrar_datos(user_url)
+    except ValueError:
+        pass
 
 # Ejecutar acción seleccionada
 acciones.get(opcion, lambda: None)()
