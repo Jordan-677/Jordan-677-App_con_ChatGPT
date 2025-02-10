@@ -88,23 +88,27 @@ def mostrar_funcionalidades(df):
     st.header("Funcionalidades de Análisis y Visualización")
 
     checkboxes = [
-        ("Mapa de calor de densidad (Técnica: Tallado)", mostrar_mapa_calor),
-        ("Gráfico de barras: Artefactos por Cultura", mostrar_barras_cultura),
-        ("Correlación Edad vs Profundidad", mostrar_correlacion_edad_profundidad),
-        ("Distribución de Materiales por Cultura", mostrar_materiales_cultura),
-        ("Mapa de dispersión: Ubicación de artefactos", mostrar_mapa_dispersion),
-        ("Patrones decorativos por Cultura", mostrar_patrones_decorativos),
-        ("Patrones temporales en descubrimientos", mostrar_patrones_temporales)
+        (st.checkbox("Mapa de calor de densidad (Técnica: Tallado)"), mostrar_mapa_calor),
+        (st.checkbox("Gráfico de barras: Artefactos por Cultura"), mostrar_barras_cultura),
+        (st.checkbox("Correlación Edad vs Profundidad"), mostrar_correlacion_edad_profundidad),
+        (st.checkbox("Distribución de Materiales por Cultura"), mostrar_materiales_cultura),
+        (st.checkbox("Mapa de dispersión: Ubicación de artefactos"), mostrar_mapa_dispersion),
+        (st.checkbox("Patrones decorativos por Cultura"), mostrar_patrones_decorativos),
+        (st.checkbox("Patrones temporales en descubrimientos"), mostrar_patrones_temporales)
     ]
 
-    list(map(lambda cb: cb[1](df) if st.checkbox(cb[0]) else None, checkboxes))
+    any(map(lambda cb: cb[1](df) if cb[0] else None, checkboxes))
 
 # Funciones auxiliares para visualización
 def mostrar_mapa_calor(df):
     tecnica_tallado = df[df["Técnica_Fabricación"] == "tallado"]
-    plt.figure(figsize=(10, 6))
-    sns.heatmap(tecnica_tallado.corr(), annot=True, cmap="coolwarm")
-    st.pyplot(plt)
+    numeric_cols = tecnica_tallado.select_dtypes(include=[np.number])
+    try:
+        plt.figure(figsize=(10, 6))
+        sns.heatmap(numeric_cols.corr(), annot=True, cmap="coolwarm")
+        st.pyplot(plt)
+    except ValueError:
+        st.warning("No hay suficientes columnas numéricas para generar el mapa de calor.")
 
 def mostrar_barras_cultura(df):
     plt.figure(figsize=(12, 6))
@@ -145,5 +149,4 @@ def mostrar_patrones_temporales(df):
 
 # Ejecutar acción seleccionada
 acciones.get(opcion, lambda: None)()
-
 
