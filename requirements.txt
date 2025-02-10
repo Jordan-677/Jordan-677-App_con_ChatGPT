@@ -5,3 +5,5 @@ geopandas
 scipy
 seaborn
 folium
+scikit-learn
+
