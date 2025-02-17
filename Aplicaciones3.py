@@ -63,7 +63,7 @@ def main():
     opcion = st.selectbox("Elige una opción", opciones)
     
     if opcion == "Cargar archivo":
-        url = "https://raw.githubusercontent.com/Jordan-677/Jordan-677-App_con_ChatGPT/main/Base_de_datos.csv"
+        url = "https://raw.githubusercontent.com/Jordan-677/Jordan-677-App_con_ChatGPT/refs/heads/main/Base_de_datos_relacionada_con_madera_movilizada_proveniente_de_Plantaciones_Forestales_Comerciales_20250217.csv"
         df = cargar_datos(url)
         if df is not None:
             mostrar_estadisticas(df)
