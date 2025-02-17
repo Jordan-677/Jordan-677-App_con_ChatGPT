@@ -98,6 +98,39 @@ def especies_menor_volumen(df):
     fig = px.bar(especies_min, x="ESPECIE", y="VOLUMEN M3", title="Top 10 Especies con Menor Volumen")
     st.plotly_chart(fig)
 
+# Función para comparar distribución de especies entre departamentos
+def comparar_distribucion_especies(df):
+    st.subheader("Comparación de la Distribución de Especies entre Departamentos")
+    fig = px.histogram(df, x="ESPECIE", color="DPTO", barmode="group",
+                       title="Distribución de Especies por Departamento")
+    st.plotly_chart(fig)
+
+# Función para clustering de municipios y departamentos
+def clustering_movilizacion(df):
+    st.subheader("Clustering de Municipios y Departamentos por Movilización de Madera")
+    df_cluster = df.groupby(["DPTO", "MUNICIPIO"])["VOLUMEN M3"].sum().reset_index()
+    df_cluster["log_volumen"] = np.log1p(df_cluster["VOLUMEN M3"])
+    kmeans = KMeans(n_clusters=4, random_state=42)
+    df_cluster["Cluster"] = kmeans.fit_predict(df_cluster[["log_volumen"]])
+    fig = px.scatter(df_cluster, x="MUNICIPIO", y="VOLUMEN M3", color="Cluster",
+                     title="Clusters de Municipios por Movilización de Madera")
+    st.plotly_chart(fig)
+
+# Función para calcular el índice de diversidad de Shannon
+def indice_diversidad_shannon(df):
+    st.subheader("Índice de Diversidad de Shannon por Departamento")
+    shannon_index = df.groupby("DPTO")["ESPECIE"].apply(lambda x: entropy(x.value_counts()))
+    shannon_df = pd.DataFrame({"DPTO": shannon_index.index, "Índice de Shannon": shannon_index.values})
+    fig = px.bar(shannon_df, x="DPTO", y="Índice de Shannon",
+                 title="Índice de Diversidad de Shannon por Departamento")
+    st.plotly_chart(fig)
+
+# Función para comparar diversidad entre regiones
+def comparar_diversidad_regiones(df):
+    st.subheader("Comparación de Diversidad entre Regiones")
+    fig = px.box(df, x="DPTO", y="ESPECIE", title="Comparación de Diversidad entre Regiones")
+    st.plotly_chart(fig)
+
 # Función principal
 def main():
     st.title("Análisis de Movilización de Madera en Colombia")
@@ -115,6 +148,10 @@ def main():
             detectar_outliers(df)
             volumen_por_municipio(df)
             especies_menor_volumen(df)
+            comparar_distribucion_especies(df)
+            clustering_movilizacion(df)
+            indice_diversidad_shannon(df)
+            comparar_diversidad_regiones(df)
     elif opcion == "Ingresar URL":
         user_url = st.text_input("Ingresa la URL del archivo CSV:")
         if user_url:
@@ -127,6 +164,10 @@ def main():
                 detectar_outliers(df)
                 volumen_por_municipio(df)
                 especies_menor_volumen(df)
+                comparar_distribucion_especies(df)
+                clustering_movilizacion(df)
+                indice_diversidad_shannon(df)
+                comparar_diversidad_regiones(df)
 
 if __name__ == "__main__":
     main()
