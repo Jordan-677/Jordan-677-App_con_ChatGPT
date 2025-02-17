@@ -115,16 +115,10 @@ st.sidebar.header("Cargar Datos")
 upload_option = st.sidebar.radio("Selecciona una opción para cargar datos:", ("Subir archivo", "Usar URL"))
 
 if upload_option == "Subir archivo":
-    uploaded_file = st.sidebar.file_uploader("Sube tu archivo CSV", type=["csv"])
-    if uploaded_file:
-        df = pd.read_csv(uploaded_file)
-        df = fill_missing_data(df)
-        st.sidebar.success("Archivo cargado exitosamente!")
-    else:
-        url = "https://raw.githubusercontent.com/Jordan-677/Jordan-677-App_con_ChatGPT/refs/heads/main/data_science_job.csv"
-        df = cargar_datos(url)
-        if df is not None:
-            st.sidebar.success("Datos cargados exitosamente desde la URL predefinida!")
+    url = "https://raw.githubusercontent.com/Jordan-677/Jordan-677-App_con_ChatGPT/refs/heads/main/data_science_job.csv"
+    df = cargar_datos(url)
+    if df is not None:
+        st.sidebar.success("Datos cargados exitosamente desde la URL predefinida!")
 else:
     url = st.sidebar.text_input("Introduce la URL del archivo CSV")
     if st.sidebar.button("Cargar datos"):
