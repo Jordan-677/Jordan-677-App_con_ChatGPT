@@ -47,14 +47,14 @@ def cargar_datos(url):
 def mostrar_graficos(df):
     st.write("Columnas disponibles en el DataFrame:", df.columns)
 
-    if 'job_title' in df.columns and 'company_type' in df.columns:
-        st.subheader("Puestos de trabajo más comunes y su distribución según el tipo de compañía")
+    if 'company_type' in df.columns:
+        st.subheader("Distribución de tipos de compañía")
         fig, ax = plt.subplots(figsize=(10, 6))
-        sns.countplot(x='job_title', hue='company_type', data=df, ax=ax)
+        sns.countplot(x='company_type', data=df, ax=ax)
         plt.xticks(rotation=90)
         st.pyplot(fig)
     else:
-        st.error("Las columnas 'job_title' o 'company_type' no están presentes en los datos.")
+        st.error("La columna 'company_type' no está presente en los datos.")
 
     if 'education_level' in df.columns:
         st.subheader("Niveles de educación totales")
@@ -108,11 +108,10 @@ def realizar_clustering(df):
 
 # Función para realizar regresión logística
 def realizar_regresion_logistica(df):
-    if 'looking_for_job' in df.columns:
+    if 'target' in df.columns:
         st.subheader("Regresión logística para identificar características discriminantes de candidatos buscando empleo")
-        df['looking_for_job'] = df['looking_for_job'].apply(lambda x: 1 if x == 'Yes' else 0)
-        X = df.select_dtypes(include=np.number).drop(columns=['looking_for_job'])
-        y = df['looking_for_job']
+        X = df.select_dtypes(include=np.number).drop(columns=['target'])
+        y = df['target']
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
         model = LogisticRegression()
@@ -126,7 +125,7 @@ def realizar_regresion_logistica(df):
         st.write("Coeficientes del modelo:")
         st.write(coef)
     else:
-        st.error("La columna 'looking_for_job' no está presente en los datos.")
+        st.error("La columna 'target' no está presente en los datos.")
 
 # Interfaz de Streamlit
 st.title("Análisis de Ofertas de Trabajo en Ciencia de Datos")
