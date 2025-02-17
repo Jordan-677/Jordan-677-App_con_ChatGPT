@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 import geopandas as gpd
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.preprocessing import LabelEncoder
+from scipy.stats import entropy
+from sklearn.cluster import KMeans
 
 # Función para llenar datos faltantes
 def fill_missing_data(df):
