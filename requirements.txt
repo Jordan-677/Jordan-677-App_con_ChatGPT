@@ -7,4 +7,5 @@ seaborn
 folium
 scikit-learn
 streamlit-folium
+plotly
 
