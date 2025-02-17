@@ -48,8 +48,10 @@ def cargar_datos(url):
 # Función para identificar especies de madera más comunes
 def especies_mas_comunes(df):
     st.subheader("Especies de Madera Más Comunes")
-    especies_pais = df.groupby("ESPECIE")["VOLUMEN M3"].sum().reset_index()
+    especies_pais = df.groupby("ESPECIE")["VOLUMEN M3"].sum().nlargest(3).reset_index()
     especies_dpto = df.groupby(["DPTO", "ESPECIE"])["VOLUMEN M3"].sum().reset_index()
+    especies_dpto = especies_dpto.groupby("DPTO").apply(lambda x: x.nlargest(3, "VOLUMEN M3")).reset_index(drop=True)
+    
     st.write("### A nivel país")
     st.dataframe(especies_pais)
     st.write("### Por departamento")
@@ -103,7 +105,7 @@ def main():
     opcion = st.selectbox("Elige una opción", opciones)
     
     if opcion == "Cargar archivo":
-        url = "https://raw.githubusercontent.com/Jordan-677/Jordan-677-App_con_ChatGPT/refs/heads/main/Base_de_datos_relacionada_con_madera_movilizada_proveniente_de_Plantaciones_Forestales_Comerciales_20250217.csv"
+        url = "https://raw.githubusercontent.com/Jordan-677/Jordan-677-App_con_ChatGPT/main/Base_de_datos.csv"
         df = cargar_datos(url)
         if df is not None:
             especies_mas_comunes(df)
