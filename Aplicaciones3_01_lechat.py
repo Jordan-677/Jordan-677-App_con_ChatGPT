@@ -45,68 +45,88 @@ def cargar_datos(url):
 
 # Función para mostrar gráficos
 def mostrar_graficos(df):
-    st.subheader("Puestos de trabajo más comunes y su distribución según el tipo de compañía")
-    fig, ax = plt.subplots(figsize=(10, 6))
-    sns.countplot(x='job_title', hue='company_type', data=df, ax=ax)
-    plt.xticks(rotation=90)
-    st.pyplot(fig)
+    st.write("Columnas disponibles en el DataFrame:", df.columns)
 
-    st.subheader("Niveles de educación totales")
-    fig, ax = plt.subplots(figsize=(10, 6))
-    sns.countplot(x='education_level', data=df, ax=ax)
-    plt.xticks(rotation=90)
-    st.pyplot(fig)
+    if 'job_title' in df.columns and 'company_type' in df.columns:
+        st.subheader("Puestos de trabajo más comunes y su distribución según el tipo de compañía")
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.countplot(x='job_title', hue='company_type', data=df, ax=ax)
+        plt.xticks(rotation=90)
+        st.pyplot(fig)
+    else:
+        st.error("Las columnas 'job_title' o 'company_type' no están presentes en los datos.")
 
-    st.subheader("Niveles de educación discriminados por género")
-    fig, ax = plt.subplots(figsize=(10, 6))
-    sns.countplot(x='education_level', hue='gender', data=df, ax=ax)
-    plt.xticks(rotation=90)
-    st.pyplot(fig)
+    if 'education_level' in df.columns:
+        st.subheader("Niveles de educación totales")
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.countplot(x='education_level', data=df, ax=ax)
+        plt.xticks(rotation=90)
+        st.pyplot(fig)
+    else:
+        st.error("La columna 'education_level' no está presente en los datos.")
 
-    st.subheader("Características de las industrias que ofrecen trabajo en ciencia de datos")
-    fig, ax = plt.subplots(figsize=(10, 6))
-    sns.countplot(x='industry', data=df, ax=ax)
-    plt.xticks(rotation=90)
-    st.pyplot(fig)
+    if 'education_level' in df.columns and 'gender' in df.columns:
+        st.subheader("Niveles de educación discriminados por género")
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.countplot(x='education_level', hue='gender', data=df, ax=ax)
+        plt.xticks(rotation=90)
+        st.pyplot(fig)
+    else:
+        st.error("Las columnas 'education_level' o 'gender' no están presentes en los datos.")
+
+    if 'industry' in df.columns:
+        st.subheader("Características de las industrias que ofrecen trabajo en ciencia de datos")
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.countplot(x='industry', data=df, ax=ax)
+        plt.xticks(rotation=90)
+        st.pyplot(fig)
+    else:
+        st.error("La columna 'industry' no está presente en los datos.")
 
 # Función para realizar clustering
 def realizar_clustering(df):
-    st.subheader("Clustering de ofertas de trabajo")
-    features = df.select_dtypes(include=np.number).dropna(axis=1)
-    kmeans = KMeans(n_clusters=3, random_state=42)
-    df['cluster'] = kmeans.fit_predict(features)
+    if 'experience_years' in df.columns and 'education_level' in df.columns:
+        st.subheader("Clustering de ofertas de trabajo")
+        features = df.select_dtypes(include=np.number).dropna(axis=1)
+        kmeans = KMeans(n_clusters=3, random_state=42)
+        df['cluster'] = kmeans.fit_predict(features)
 
-    fig, ax = plt.subplots(figsize=(10, 6))
-    sns.scatterplot(x=features.iloc[:, 0], y=features.iloc[:, 1], hue=df['cluster'], palette='viridis', ax=ax)
-    st.pyplot(fig)
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.scatterplot(x=features.iloc[:, 0], y=features.iloc[:, 1], hue=df['cluster'], palette='viridis', ax=ax)
+        st.pyplot(fig)
 
-    st.subheader("Clustering de candidatos")
-    candidate_features = df[['experience_years', 'education_level']].dropna()
-    kmeans_candidates = KMeans(n_clusters=3, random_state=42)
-    df['candidate_cluster'] = kmeans_candidates.fit_predict(candidate_features)
+        st.subheader("Clustering de candidatos")
+        candidate_features = df[['experience_years', 'education_level']].dropna()
+        kmeans_candidates = KMeans(n_clusters=3, random_state=42)
+        df['candidate_cluster'] = kmeans_candidates.fit_predict(candidate_features)
 
-    fig, ax = plt.subplots(figsize=(10, 6))
-    sns.scatterplot(x='experience_years', y='education_level', hue='candidate_cluster', data=df, palette='viridis', ax=ax)
-    st.pyplot(fig)
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.scatterplot(x='experience_years', y='education_level', hue='candidate_cluster', data=df, palette='viridis', ax=ax)
+        st.pyplot(fig)
+    else:
+        st.error("Las columnas 'experience_years' o 'education_level' no están presentes en los datos.")
 
 # Función para realizar regresión logística
 def realizar_regresion_logistica(df):
-    st.subheader("Regresión logística para identificar características discriminantes de candidatos buscando empleo")
-    df['looking_for_job'] = df['looking_for_job'].apply(lambda x: 1 if x == 'Yes' else 0)
-    X = df.select_dtypes(include=np.number).drop(columns=['looking_for_job'])
-    y = df['looking_for_job']
+    if 'looking_for_job' in df.columns:
+        st.subheader("Regresión logística para identificar características discriminantes de candidatos buscando empleo")
+        df['looking_for_job'] = df['looking_for_job'].apply(lambda x: 1 if x == 'Yes' else 0)
+        X = df.select_dtypes(include=np.number).drop(columns=['looking_for_job'])
+        y = df['looking_for_job']
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    model = LogisticRegression()
-    model.fit(X_train, y_train)
-    y_pred = model.predict(X_test)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+        model = LogisticRegression()
+        model.fit(X_train, y_train)
+        y_pred = model.predict(X_test)
 
-    accuracy = accuracy_score(y_test, y_pred)
-    st.write(f"Precisión del modelo: {accuracy:.2f}")
+        accuracy = accuracy_score(y_test, y_pred)
+        st.write(f"Precisión del modelo: {accuracy:.2f}")
 
-    coef = pd.DataFrame(model.coef_, columns=X.columns, index=['Coeficiente'])
-    st.write("Coeficientes del modelo:")
-    st.write(coef)
+        coef = pd.DataFrame(model.coef_, columns=X.columns, index=['Coeficiente'])
+        st.write("Coeficientes del modelo:")
+        st.write(coef)
+    else:
+        st.error("La columna 'looking_for_job' no está presente en los datos.")
 
 # Interfaz de Streamlit
 st.title("Análisis de Ofertas de Trabajo en Ciencia de Datos")
@@ -133,3 +153,4 @@ if 'df' in locals():
     mostrar_graficos(df)
     realizar_clustering(df)
     realizar_regresion_logistica(df)
+
