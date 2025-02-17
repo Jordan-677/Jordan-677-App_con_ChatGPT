@@ -14,18 +14,25 @@ def fill_missing_data(df):
     numerical_cols = df.select_dtypes(include=np.number).columns
     df[categorical_cols] = df[categorical_cols].fillna(df[categorical_cols].mode().iloc[0])
     
+    if df[numerical_cols].isna().sum().sum() == 0:
+        return df  # Si no hay valores nulos, retornar el dataframe sin cambios
+    
     data_for_imputation = df.copy()
     le = LabelEncoder()
     data_for_imputation[categorical_cols] = data_for_imputation[categorical_cols].apply(le.fit_transform)
     
-    imputer = KNeighborsRegressor(n_neighbors=5)
     data_for_fitting = data_for_imputation.dropna()
-    imputer.fit(data_for_fitting.drop(numerical_cols, axis=1), data_for_fitting[numerical_cols])
     
-    rows_with_nan = data_for_imputation[numerical_cols].isna().any(axis=1)
-    df.loc[rows_with_nan, numerical_cols] = imputer.predict(
-        data_for_imputation.loc[rows_with_nan].drop(numerical_cols, axis=1)
-    )
+    if not data_for_fitting.empty:
+        imputer = KNeighborsRegressor(n_neighbors=5)
+        imputer.fit(data_for_fitting.drop(numerical_cols, axis=1), data_for_fitting[numerical_cols])
+        rows_with_nan = data_for_imputation[numerical_cols].isna().any(axis=1)
+        df.loc[rows_with_nan, numerical_cols] = imputer.predict(
+            data_for_imputation.loc[rows_with_nan].drop(numerical_cols, axis=1)
+        )
+    else:
+        df[numerical_cols] = df[numerical_cols].fillna(df[numerical_cols].median())
+    
     return df
 
 # Función para cargar archivo
@@ -80,3 +87,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
