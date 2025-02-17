@@ -63,6 +63,28 @@ def mapa_calor_departamentos(df):
     sns.heatmap(vol_por_dpto.pivot_table(values="VOLUMEN M3", index="DPTO"), cmap="YlGnBu", annot=True)
     st.pyplot(fig)
 
+# Función para mostrar la evolución temporal del volumen movilizado
+def evolucion_temporal(df):
+    fig = px.line(df, x="AÑO", y="VOLUMEN M3", color="ESPECIE", title="Evolución del Volumen Movilizado por Especie")
+    st.plotly_chart(fig)
+
+# Función para identificar outliers
+def detectar_outliers(df):
+    fig = px.box(df, y="VOLUMEN M3", title="Detección de Outliers en el Volumen Movilizado")
+    st.plotly_chart(fig)
+
+# Función para agrupar por municipio
+def volumen_por_municipio(df):
+    vol_muni = df.groupby("MUNICIPIO")["VOLUMEN M3"].sum().reset_index()
+    fig = px.bar(vol_muni.nlargest(10, "VOLUMEN M3"), x="MUNICIPIO", y="VOLUMEN M3", title="Top 10 Municipios con Mayor Movilización")
+    st.plotly_chart(fig)
+
+# Función para identificar especies con menor volumen movilizado
+def especies_menor_volumen(df):
+    especies_min = df.groupby("ESPECIE")["VOLUMEN M3"].sum().nsmallest(10).reset_index()
+    fig = px.bar(especies_min, x="ESPECIE", y="VOLUMEN M3", title="Top 10 Especies con Menor Volumen Movilizado")
+    st.plotly_chart(fig)
+
 # Función principal
 def main():
     st.title("Análisis de Movilización de Madera en Colombia")
@@ -76,6 +98,10 @@ def main():
             mostrar_estadisticas(df)
             grafico_top_especies(df)
             mapa_calor_departamentos(df)
+            evolucion_temporal(df)
+            detectar_outliers(df)
+            volumen_por_municipio(df)
+            especies_menor_volumen(df)
     elif opcion == "Ingresar URL":
         user_url = st.text_input("Ingresa la URL del archivo CSV:")
         if user_url:
@@ -84,7 +110,10 @@ def main():
                 mostrar_estadisticas(df)
                 grafico_top_especies(df)
                 mapa_calor_departamentos(df)
+                evolucion_temporal(df)
+                detectar_outliers(df)
+                volumen_por_municipio(df)
+                especies_menor_volumen(df)
 
 if __name__ == "__main__":
     main()
-
